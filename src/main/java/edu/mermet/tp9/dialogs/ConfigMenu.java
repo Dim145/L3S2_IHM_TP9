@@ -12,6 +12,7 @@ public class ConfigMenu extends JDialog
     private final JButton annuler;
 
     private final HashMap<JMenuItem, JRadioButton[]> hashMapRadioBtn;
+    private final HashMap<JMenuItem, Boolean[]>      hashMapBaseValue;
 
     public ConfigMenu(JMenuItem[] jMenuItems)
     {
@@ -26,18 +27,18 @@ public class ConfigMenu extends JDialog
         this.annuler = new JButton("annuler");
 
         this.valider.addActionListener(event -> this.execValidScript());
-        this.annuler.addActionListener(event -> this.setVisible(false));
+        this.annuler.addActionListener(event -> this.reset());
 
-        this.hashMapRadioBtn = new HashMap<>();
+        this.hashMapRadioBtn  = new HashMap<>();
+        this.hashMapBaseValue = new HashMap<>();
+
         for (JMenuItem item : jMenuItems)
         {
-            JPanel panelTMP = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-
-            ButtonGroup group = new ButtonGroup();
+            JRadioButton[] tab      = new JRadioButton[3];
+            JPanel         panelTMP = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            ButtonGroup    group    = new ButtonGroup();
 
             panelTMP.add(new JLabel(item.getText()));
-
-            JRadioButton[] tab = new JRadioButton[3];
 
             tab[0] = new JRadioButton("Auto");
             tab[1] = new JRadioButton("Caché");
@@ -51,7 +52,14 @@ public class ConfigMenu extends JDialog
                 panelTMP.add(btn);
             }
 
-            this.hashMapRadioBtn.put(item, tab);
+            Boolean[] baseValue = new Boolean[tab.length];
+
+            for (int i = 0; i < tab.length; i++)
+                baseValue[i] = tab[i].isSelected();
+
+            this.hashMapBaseValue.put(item, baseValue);
+            this.hashMapRadioBtn .put(item, tab);
+
             panelCenter.add(panelTMP);
         }
 
@@ -66,6 +74,21 @@ public class ConfigMenu extends JDialog
         this.setLocationRelativeTo(null);
     }
 
+    private void reset()
+    {
+        for (JMenuItem item : this.hashMapBaseValue.keySet())
+        {
+            JRadioButton[] tab        = this.hashMapRadioBtn .get(item);
+            Boolean[]      baseValues = this.hashMapBaseValue.get(item);
+
+            for (int i = 0; i < tab.length; i++)
+                tab[i].setSelected(baseValues[i]);
+        }
+
+        if( this.isVisible() )
+            this.setVisible(false);
+    }
+
     private void execValidScript()
     {
         for (JMenuItem item : this.hashMapRadioBtn.keySet())
@@ -78,6 +101,11 @@ public class ConfigMenu extends JDialog
             {
                 // Auto
             }
+
+            Boolean[] values = this.hashMapBaseValue.get(item);
+
+            for (int i = 0; i < tab.length; i++)
+                values[i] = tab[i].isSelected();
         }
 
         if( this.isVisible() )
