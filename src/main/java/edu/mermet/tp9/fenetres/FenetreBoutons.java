@@ -7,14 +7,16 @@ import javax.swing.JButton;
 import edu.mermet.tp9.Application;
 
 /**
- *
  * @author brunomermet
  */
-public class FenetreBoutons extends AbstractFenetreInterne {
+public class FenetreBoutons extends AbstractFenetreInterne
+{
     private JButton boutonTexte;
     private JButton boutonDiaporama;
     private JButton boutonDegres;
-    public FenetreBoutons(Application appli, Action action) {
+
+    public FenetreBoutons(Application appli, Action action)
+    {
         super(action, "Boutons");
         setLayout(new FlowLayout());
         boutonTexte = new JButton(appli.getActionAfficherTexte());

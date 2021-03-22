@@ -16,6 +16,8 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
+import edu.mermet.tp9.dialogs.CommentFaire;
+import edu.mermet.tp9.dialogs.ConfigMenu;
 import edu.mermet.tp9.fenetres.FenetreBoutons;
 import edu.mermet.tp9.fenetres.FenetreConversion;
 import edu.mermet.tp9.fenetres.FenetreDiaporama;
@@ -26,14 +28,21 @@ import edu.mermet.tp9.fenetres.FenetreTexte;
  */
 public class Application extends JFrame
 {
-    private JInternalFrame conversion;
-    private JInternalFrame texte;
-    private JInternalFrame diaporama;
-    private JInternalFrame boutons;
-    private Action actionAfficherConversion;
-    private Action actionAfficherTexte;
-    private Action actionAfficherDiaporama;
-    private Action actionAfficherBoutons;
+    private final ActionCommentFaire actionCommentFaire;
+    private final ActionConfigMenu   actionConfigMenu;
+
+    private final CommentFaire dialogCommentFaire;
+    private final ConfigMenu   dialogConfigMenu;
+
+    private final JInternalFrame conversion;
+    private final JInternalFrame texte;
+    private final JInternalFrame diaporama;
+    private final JInternalFrame boutons;
+
+    private final Action actionAfficherConversion;
+    private final Action actionAfficherTexte;
+    private final Action actionAfficherDiaporama;
+    private final Action actionAfficherBoutons;
 
     public Application()
     {
@@ -74,6 +83,19 @@ public class Application extends JFrame
         JMenuItem itemBoutons = new JMenuItem(actionAfficherBoutons);
         menuApplication.add(itemBoutons);
         barre.add(menuApplication);
+
+        //--------- menu Aide -----------------
+        JMenu menuAide = new JMenu("Aide");
+
+        this.actionCommentFaire = new ActionCommentFaire();
+        JMenuItem commentFaire = new JMenuItem(actionCommentFaire);
+        menuAide.add(commentFaire);
+
+        this.actionConfigMenu = new ActionConfigMenu();
+        JMenuItem configMenu = new JMenuItem(actionConfigMenu);
+        menuAide.add(configMenu);
+
+        barre.add(menuAide);
         // ****** Fin barre de menu ******
 
         // ****** Création des fenêtres ******
@@ -89,11 +111,51 @@ public class Application extends JFrame
         // ------ fenêtre boutons ------
         boutons = new FenetreBoutons(this, actionAfficherBoutons);
         this.add(boutons);
+
+        //------- Dialog comment faire --------------
+        this.dialogCommentFaire = new CommentFaire();
+
+        //------- Dialog config menu ----------------
+        this.dialogConfigMenu = new ConfigMenu(new JMenuItem[]{itemConversion, itemDiaporama, itemBoutons, itemTexte});
         // ****** Fin création fenêtres ******
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 300);
         this.setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    private class ActionConfigMenu extends AbstractAction
+    {
+        public ActionConfigMenu()
+        {
+            super("Configuration des menus");
+
+            putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_DOWN_MASK));
+            putValue(Action.MNEMONIC_KEY, KeyEvent.VK_M);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            dialogConfigMenu.setVisible(true);
+        }
+    }
+
+    private class ActionCommentFaire extends AbstractAction
+    {
+        public ActionCommentFaire()
+        {
+            super("Comment faire ?");
+
+            putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK));
+            putValue(Action.MNEMONIC_KEY, KeyEvent.VK_H);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            dialogCommentFaire.setVisible(true);
+        }
     }
 
     private class ActionAfficherBoutons extends AbstractAction

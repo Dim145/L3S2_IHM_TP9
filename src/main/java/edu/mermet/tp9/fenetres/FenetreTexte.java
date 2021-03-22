@@ -19,16 +19,18 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
 /**
- *
  * @author brunomermet
  */
-public class FenetreTexte extends AbstractFenetreInterne {
+public class FenetreTexte extends AbstractFenetreInterne
+{
     private JCheckBox gras;
     private JCheckBox rouge;
     private Action actionGras;
     private Action actionRouge;
     private JTextArea texte;
-    public FenetreTexte(Action action) {
+
+    public FenetreTexte(Action action)
+    {
         super(action, "Texte");
         actionGras = new ActionGras();
         gras = new JCheckBox(actionGras);
@@ -37,12 +39,12 @@ public class FenetreTexte extends AbstractFenetreInterne {
         JPanel panneauBouton = new JPanel();
         panneauBouton.add(gras);
         panneauBouton.add(rouge);
-        add(panneauBouton,BorderLayout.NORTH);
-        texte = new JTextArea(6,20);
+        add(panneauBouton, BorderLayout.NORTH);
+        texte = new JTextArea(6, 20);
         texte.setLineWrap(true);
         texte.setWrapStyleWord(true);
         JScrollPane panneauTexte = new JScrollPane(texte);
-        add(panneauTexte,BorderLayout.CENTER);
+        add(panneauTexte, BorderLayout.CENTER);
         JMenuBar barre = new JMenuBar();
         JMenu style = new JMenu("Style");
         style.add(new JMenuItem(actionGras));
@@ -52,49 +54,60 @@ public class FenetreTexte extends AbstractFenetreInterne {
         pack();
     }
 
-    
 
-    private class ActionGras extends AbstractAction {
+    private class ActionGras extends AbstractAction
+    {
         private boolean gras;
-        public ActionGras() {
+
+        public ActionGras()
+        {
             super("gras");
             gras = false;
-            putValue(Action.ACCELERATOR_KEY,KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_DOWN_MASK));
-            putValue(Action.SELECTED_KEY,false);
+            putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_DOWN_MASK));
+            putValue(Action.SELECTED_KEY, false);
         }
 
         @Override
-        public void actionPerformed(ActionEvent ae) {
+        public void actionPerformed(ActionEvent ae)
+        {
             Font police = texte.getFont();
-            if (!gras) {
+            if (!gras)
+            {
                 police = police.deriveFont(Font.BOLD);//|Font.ITALIC);
                 //police = police.deriveFont((float)24.0);
             }
-            else {
+            else
+            {
                 police = police.deriveFont(Font.PLAIN);
             }
             gras = !gras;
-            putValue(Action.SELECTED_KEY,gras);
+            putValue(Action.SELECTED_KEY, gras);
             texte.setFont(police);
         }
     }
 
-    private class ActionRouge extends AbstractAction {
+    private class ActionRouge extends AbstractAction
+    {
         private boolean rouge;
-        public ActionRouge() {
+
+        public ActionRouge()
+        {
             super("rouge");
             rouge = false;
-            putValue(Action.ACCELERATOR_KEY,KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
-            putValue(Action.SELECTED_KEY,false);
+            putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
+            putValue(Action.SELECTED_KEY, false);
 
         }
 
         @Override
-        public void actionPerformed(ActionEvent ae) {
-            if (!rouge) {
+        public void actionPerformed(ActionEvent ae)
+        {
+            if (!rouge)
+            {
                 texte.setForeground(Color.RED);
             }
-            else {
+            else
+            {
                 texte.setForeground(Color.BLACK);
             }
             rouge = !rouge;

@@ -14,19 +14,21 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- *
  * @author brunomermet
  */
-public class FenetreConversion extends AbstractFenetreInterne {
+public class FenetreConversion extends AbstractFenetreInterne
+{
     private JTextField champCelsius;
     private JTextField champFarenheit;
     private JButton boutonConvertir;
     private Action actionConvertir;
     private boolean celsiusAFocus;
-    public FenetreConversion(Action action) {
-        super(action,"Conversion celsius/Farenheit");
-        this.setSize(new Dimension(100,50));
-        this.setLayout(new GridLayout(3,1));
+
+    public FenetreConversion(Action action)
+    {
+        super(action, "Conversion celsius/Farenheit");
+        this.setSize(new Dimension(100, 50));
+        this.setLayout(new GridLayout(3, 1));
         JPanel ligneCelsius = new JPanel();
         ligneCelsius.setLayout(new FlowLayout(FlowLayout.TRAILING));
         JLabel labCelsius = new JLabel("Celsius :");
@@ -52,61 +54,74 @@ public class FenetreConversion extends AbstractFenetreInterne {
         boutonConvertir = new JButton(actionConvertir);
         ligneValider.add(boutonConvertir);
         this.add(ligneValider);
-        
+
         pack();
         getRootPane().setDefaultButton(boutonConvertir);
     }
 
-    private class EcouteurFocus implements FocusListener {
+    private class EcouteurFocus implements FocusListener
+    {
         private boolean aStocker;
 
-        public EcouteurFocus(boolean b) {
+        public EcouteurFocus(boolean b)
+        {
             aStocker = b;
         }
 
         @Override
-        public void focusGained(FocusEvent fe) {
+        public void focusGained(FocusEvent fe)
+        {
             celsiusAFocus = aStocker;
         }
 
         @Override
-        public void focusLost(FocusEvent fe) {
+        public void focusLost(FocusEvent fe)
+        {
             return;
         }
     }
 
-    private class ActionConvertir extends AbstractAction {
+    private class ActionConvertir extends AbstractAction
+    {
 
-        public ActionConvertir() {
+        public ActionConvertir()
+        {
             super("Convertir");
         }
 
         @Override
-        public void actionPerformed(ActionEvent ae) {
+        public void actionPerformed(ActionEvent ae)
+        {
             double tempCelsius = 0;
             double tempFarenheit = 0;
-            if (celsiusAFocus) {
-                try {
+            if (celsiusAFocus)
+            {
+                try
+                {
                     tempCelsius = Double.parseDouble(champCelsius.getText());
-                tempFarenheit = 9./5*tempCelsius+32;
-                champFarenheit.setText(""+tempFarenheit);
+                    tempFarenheit = 9. / 5 * tempCelsius + 32;
+                    champFarenheit.setText("" + tempFarenheit);
                 }
-                catch (NumberFormatException nfe) {
+                catch (NumberFormatException nfe)
+                {
                     champFarenheit.setText("Format incorrect");
                 }
-                }
-            else {
-                try {
+            }
+            else
+            {
+                try
+                {
                     tempFarenheit = Double.parseDouble(champFarenheit.getText());
-                    tempCelsius = (tempFarenheit - 32) *5./9;
-                    champCelsius.setText(""+tempCelsius);
+                    tempCelsius = (tempFarenheit - 32) * 5. / 9;
+                    champCelsius.setText("" + tempCelsius);
                 }
-                catch (NumberFormatException nfe) {
+                catch (NumberFormatException nfe)
+                {
                     champCelsius.setText("Format incorrect");
                 }
-                
+
             }
         }
     }
-    
+
 }
