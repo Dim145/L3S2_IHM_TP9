@@ -1,12 +1,14 @@
 package edu.mermet.tp9.dialogs;
 
 import edu.mermet.tp9.Application;
+import edu.mermet.tp9.properties.PropertiesManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.Properties;
 
 public class ConfigMenu extends JDialog
 {
@@ -15,13 +17,14 @@ public class ConfigMenu extends JDialog
 
     private final HashMap<JMenuItem, JRadioButton[]> hashMapRadioBtn;
     private final HashMap<JMenuItem, Boolean[]>      hashMapBaseValue;
-    private final Application app;
 
-    public ConfigMenu(Application app, JMenuItem[] jMenuItems)
+    private PropertiesManager propertiesManager;
+
+    public ConfigMenu(JMenuItem[] jMenuItems)
     {
         this.setTitle("Configuration des menus");
 
-        this.app = app;
+        this.propertiesManager = PropertiesManager.getInstance();
 
         JPanel panelCenter = new JPanel();
         JPanel panelBottom = new JPanel();
@@ -49,7 +52,7 @@ public class ConfigMenu extends JDialog
             tab[1] = new JRadioButton("Caché");
             tab[2] = new JRadioButton("Affiché");
 
-            String defValue = app.getPropertie(item.getText());
+            String defValue = this.propertiesManager.getPropertie(item.getText());
 
             if( defValue != null )
             {
@@ -133,7 +136,7 @@ public class ConfigMenu extends JDialog
             for (int i = 0; i < tab.length; i++)
                 values[i] = tab[i].isSelected();
 
-            this.app.setPropertie(item.getText(), value);
+            this.propertiesManager.setPropertie(item.getText(), value);
         }
 
         if( this.isVisible() )

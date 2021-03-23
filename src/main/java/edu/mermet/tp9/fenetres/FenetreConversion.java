@@ -1,17 +1,8 @@
 package edu.mermet.tp9.fenetres;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 /**
  * @author brunomermet
@@ -29,25 +20,54 @@ public class FenetreConversion extends AbstractFenetreInterne
         super(action, "Conversion celsius/Farenheit");
         this.setSize(new Dimension(100, 50));
         this.setLayout(new GridLayout(3, 1));
+
         JPanel ligneCelsius = new JPanel();
         ligneCelsius.setLayout(new FlowLayout(FlowLayout.TRAILING));
         JLabel labCelsius = new JLabel("Celsius :");
-        champCelsius = new JTextField(15);
+        champCelsius      = new JTextField(15);
+
+        champCelsius.addMouseListener(new MousePopUpMenu("aide Celcius"));
+
+        ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/aide.png"));
+        icon = new ImageIcon(icon.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+
+        JButton labelAideCelcius = new JButton(icon);
+
+        labelAideCelcius.setBorder(BorderFactory.createEmptyBorder());
+        labelAideCelcius.setContentAreaFilled(false);
+        labelAideCelcius.setPreferredSize(new Dimension(30, 30));
+
+        labelAideCelcius.addActionListener(event -> JOptionPane.showMessageDialog(null, "aide celcius", "Aide", JOptionPane.INFORMATION_MESSAGE));
+
         labCelsius.setLabelFor(champCelsius);
         ligneCelsius.add(labCelsius);
         ligneCelsius.add(champCelsius);
+        ligneCelsius.add(labelAideCelcius);
         this.add(ligneCelsius);
         celsiusAFocus = true;
         champCelsius.addFocusListener(new EcouteurFocus(true));
+
         JPanel ligneFarenheit = new JPanel();
         ligneFarenheit.setLayout(new FlowLayout(FlowLayout.TRAILING));
         JLabel labFarenheit = new JLabel("Farenheit :");
         champFarenheit = new JTextField(15);
+
+        JButton labelAideFaren = new JButton(icon);
+
+        labelAideFaren.setBorder(BorderFactory.createEmptyBorder());
+        labelAideFaren.setContentAreaFilled(false);
+        labelAideFaren.setPreferredSize(new Dimension(30, 30));
+
+        labelAideFaren.addActionListener(event -> JOptionPane.showMessageDialog(null, "aide Faren", "Aide", JOptionPane.INFORMATION_MESSAGE));
+        champFarenheit.addMouseListener(new MousePopUpMenu("aide Farenjeit"));
+
         labFarenheit.setLabelFor(champFarenheit);
         ligneFarenheit.add(labFarenheit);
         ligneFarenheit.add(champFarenheit);
+        ligneFarenheit.add(labelAideFaren);
         this.add(ligneFarenheit);
         champFarenheit.addFocusListener(new EcouteurFocus(false));
+
         JPanel ligneValider = new JPanel();
         ligneValider.setLayout(new FlowLayout(FlowLayout.CENTER));
         actionConvertir = new ActionConvertir();
@@ -59,7 +79,7 @@ public class FenetreConversion extends AbstractFenetreInterne
         getRootPane().setDefaultButton(boutonConvertir);
     }
 
-    private class EcouteurFocus implements FocusListener
+    private class EcouteurFocus extends FocusAdapter
     {
         private boolean aStocker;
 
@@ -72,12 +92,6 @@ public class FenetreConversion extends AbstractFenetreInterne
         public void focusGained(FocusEvent fe)
         {
             celsiusAFocus = aStocker;
-        }
-
-        @Override
-        public void focusLost(FocusEvent fe)
-        {
-            return;
         }
     }
 
@@ -120,6 +134,36 @@ public class FenetreConversion extends AbstractFenetreInterne
                     champCelsius.setText("Format incorrect");
                 }
 
+            }
+        }
+    }
+
+    private static class MousePopUpMenu extends MouseAdapter
+    {
+        private String texteAide;
+
+        public MousePopUpMenu( String texteAide )
+        {
+            this.texteAide = texteAide;
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e)
+        {
+            if( SwingUtilities.isRightMouseButton(e))
+            {
+                JPopupMenu menu = new JPopupMenu();
+                JMenuItem aide = new JMenuItem("Aide");
+
+                menu.add(aide);
+
+                aide.addActionListener(event -> JOptionPane.showMessageDialog(null, this.texteAide, "Aide", JOptionPane.INFORMATION_MESSAGE));
+
+                menu.show((Component) e.getSource(), e.getX(), e.getY());
+            }
+            else
+            {
+                super.mouseClicked(e);
             }
         }
     }

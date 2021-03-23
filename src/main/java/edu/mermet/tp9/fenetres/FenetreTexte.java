@@ -1,22 +1,8 @@
 package edu.mermet.tp9.fenetres;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JCheckBox;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 /**
  * @author brunomermet
@@ -52,6 +38,10 @@ public class FenetreTexte extends AbstractFenetreInterne
         barre.add(style);
         this.setJMenuBar(barre);
         pack();
+
+        gras .addMouseListener(new MousePopUpMenu("Met le texte en gras"));
+        rouge.addMouseListener(new MousePopUpMenu("Met le texte en rouge"));
+        texte.addMouseListener(new MousePopUpMenu("Zone d'edition de texte. Du texte peut etre saisie"));
     }
 
 
@@ -112,6 +102,36 @@ public class FenetreTexte extends AbstractFenetreInterne
             }
             rouge = !rouge;
             //putValue(Action.SELECTED_KEY,rouge);
+        }
+    }
+
+    private static class MousePopUpMenu extends MouseAdapter
+    {
+        private final String texteAide;
+
+        public MousePopUpMenu( String texteAide )
+        {
+            this.texteAide = texteAide;
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e)
+        {
+            if( SwingUtilities.isRightMouseButton(e))
+            {
+                JPopupMenu menu = new JPopupMenu();
+                JMenuItem aide = new JMenuItem("Aide");
+
+                menu.add(aide);
+
+                aide.addActionListener(event -> JOptionPane.showMessageDialog(null, this.texteAide, "Aide", JOptionPane.INFORMATION_MESSAGE));
+
+                menu.show((Component) e.getSource(), e.getX(), e.getY());
+            }
+            else
+            {
+                super.mouseClicked(e);
+            }
         }
     }
 }

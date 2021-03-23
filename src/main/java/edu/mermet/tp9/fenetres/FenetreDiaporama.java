@@ -1,14 +1,11 @@
 package edu.mermet.tp9.fenetres;
 
-import java.awt.BorderLayout;
-import java.awt.Image;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
-import javax.swing.Action;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 
 /**
  * @author brunomermet
@@ -48,6 +45,7 @@ public class FenetreDiaporama extends AbstractFenetreInterne
         setSize(300, 300);
         //pack();
 
+        affichage.addMouseListener(new MousePopUpMenu("Image qui change toutes les 2s."));
     }
 
     class Defilement implements Runnable
@@ -68,7 +66,7 @@ public class FenetreDiaporama extends AbstractFenetreInterne
                 {
                     Thread.sleep(2000);
                 }
-                catch (InterruptedException iex)
+                catch (InterruptedException ignored)
                 {
                 }
                 indiceCourant++;
@@ -98,6 +96,36 @@ public class FenetreDiaporama extends AbstractFenetreInterne
             if (defilement != null)
             {
                 defilement.arreter();
+            }
+        }
+    }
+
+    private static class MousePopUpMenu extends MouseAdapter
+    {
+        private final String texteAide;
+
+        public MousePopUpMenu( String texteAide )
+        {
+            this.texteAide = texteAide;
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e)
+        {
+            if( SwingUtilities.isRightMouseButton(e))
+            {
+                JPopupMenu menu = new JPopupMenu();
+                JMenuItem aide = new JMenuItem("Aide");
+
+                menu.add(aide);
+
+                aide.addActionListener(event -> JOptionPane.showMessageDialog(null, this.texteAide, "Aide", JOptionPane.INFORMATION_MESSAGE));
+
+                menu.show((Component) e.getSource(), e.getX(), e.getY());
+            }
+            else
+            {
+                super.mouseClicked(e);
             }
         }
     }

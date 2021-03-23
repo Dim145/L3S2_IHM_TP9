@@ -2,10 +2,6 @@ package edu.mermet.tp9;
 
 
 import java.awt.event.*;
-import java.io.*;
-import java.util.Properties;
-import java.util.prefs.Preferences;
-import java.util.prefs.PreferencesFactory;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JDesktopPane;
@@ -23,15 +19,13 @@ import edu.mermet.tp9.fenetres.FenetreBoutons;
 import edu.mermet.tp9.fenetres.FenetreConversion;
 import edu.mermet.tp9.fenetres.FenetreDiaporama;
 import edu.mermet.tp9.fenetres.FenetreTexte;
+import edu.mermet.tp9.properties.PropertiesManager;
 
 /**
  * @author brunomermet
  */
 public class Application extends JFrame
 {
-    private final Properties properties;
-    private final File       fileProperties;
-
     private final ActionCommentFaire actionCommentFaire;
     private final ActionConfigMenu   actionConfigMenu;
 
@@ -48,7 +42,7 @@ public class Application extends JFrame
     private final Action actionAfficherDiaporama;
     private final Action actionAfficherBoutons;
 
-    public Application( String name )
+    public Application()
     {
         super("multi-fenêtres");
         this.setContentPane(new JDesktopPane());
@@ -115,46 +109,11 @@ public class Application extends JFrame
         //------- Dialog config menu ----------------
         JMenuItem[] tabMenuItem = new JMenuItem[]{itemConversion, itemDiaporama, itemBoutons, itemTexte};
 
-        File ihmRep         = new File(System.getProperty("user.home") + "/.ihm");
-        this.fileProperties = new File(ihmRep.getPath() + "/" + name + ".xml");
-
-        this.properties = new Properties();
-        try
-        {
-            boolean isExist = ihmRep.exists();
-
-            if( !isExist )
-                isExist = ihmRep.mkdir();
-
-            if( !isExist )
-                throw new IOException("file .ihm not created");
-
-            isExist = fileProperties.exists();
-
-            if( isExist ) properties.loadFromXML(new FileInputStream(fileProperties));
-            else          isExist = fileProperties.createNewFile();
-
-            if( isExist )
-            {
-                // 0 = auto, 1 = caché, 2 = Affiché
-                for (JMenuItem item : tabMenuItem)
-                    if( properties.getOrDefault(item.getText(), null) == null )
-                        this.properties.setProperty(item.getText(), "0");
-            }
-            else
-            {
-                throw new IOException("fichier inexistant et impossible a creer: " + fileProperties.getPath());
-            }
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        this.dialogConfigMenu = new ConfigMenu(this, tabMenuItem);
+        this.dialogConfigMenu = new ConfigMenu(tabMenuItem);
         // ****** Fin création fenêtres ******
 
-        this.addWindowListener(new WindowAdapter() {
+        this.addWindowListener(new WindowAdapter()
+        {
             @Override
             public void windowClosing(WindowEvent e)
             {
@@ -165,41 +124,12 @@ public class Application extends JFrame
         setSize(600, 300);
         this.setLocationRelativeTo(null);
         setVisible(true);
-
-        System.out.println(properties);
     }
 
     private void saveAndExit()
     {
-        this.savePropertiesToXML();
+        PropertiesManager.getInstance().savePropertiesToXML();
         System.exit(0);
-    }
-
-    public String getPropertie( String propertieName )
-    {
-        return this.properties.getProperty(propertieName, null);
-    }
-
-    public void setPropertie( String propertieName, String value )
-    {
-        this.properties.setProperty(propertieName, value);
-    }
-
-    public void setPropertie( String propertieName, int value )
-    {
-        this.setPropertie(propertieName, String.valueOf(value));
-    }
-
-    public void savePropertiesToXML()
-    {
-        try
-        {
-            this.properties.storeToXML(new FileOutputStream(this.fileProperties), "saved");
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
     }
 
     private class ActionConfigMenu extends AbstractAction
@@ -341,7 +271,9 @@ public class Application extends JFrame
 
     public static void main(String[] args)
     {
-        SwingUtilities.invokeLater( () -> new Application(args.length > 0 ? args[0] : System.getProperty("user.name")));
+        PropertiesManager.initInstanceWithName(args.length > 0 ? args[0] : System.getProperty("user.name"));
+
+        SwingUtilities.invokeLater(Application::new);
     }
 
 
