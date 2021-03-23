@@ -1,5 +1,7 @@
 package edu.mermet.tp9.dialogs;
 
+import edu.mermet.tp9.Application;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,10 +15,13 @@ public class ConfigMenu extends JDialog
 
     private final HashMap<JMenuItem, JRadioButton[]> hashMapRadioBtn;
     private final HashMap<JMenuItem, Boolean[]>      hashMapBaseValue;
+    private final Application app;
 
-    public ConfigMenu(JMenuItem[] jMenuItems)
+    public ConfigMenu(Application app, JMenuItem[] jMenuItems)
     {
         this.setTitle("Configuration des menus");
+
+        this.app = app;
 
         JPanel panelCenter = new JPanel();
         JPanel panelBottom = new JPanel();
@@ -44,7 +49,15 @@ public class ConfigMenu extends JDialog
             tab[1] = new JRadioButton("Caché");
             tab[2] = new JRadioButton("Affiché");
 
-            tab[0].setSelected(true);// todo lecture des preferences
+            String defValue = app.getPropertie(item.getText());
+
+            if( defValue != null )
+            {
+                int val = Integer.parseInt(defValue);
+
+                if( val >= 0 && val < tab.length )
+                    tab[val].setSelected(true);
+            }
 
             for (JRadioButton btn : tab)
             {
@@ -72,6 +85,8 @@ public class ConfigMenu extends JDialog
         this.setModal(true);
         this.pack();
         this.setLocationRelativeTo(null);
+
+        execValidScript();
     }
 
     private void reset()
@@ -95,10 +110,21 @@ public class ConfigMenu extends JDialog
         {
             JRadioButton[] tab = this.hashMapRadioBtn.get(item);
 
-            if( tab[1].isSelected() ) item.setVisible(false);
-            if( tab[2].isSelected() ) item.setVisible(true );
-            if( tab[0].isSelected() )
+            int value = -1;
+
+            if( tab[1].isSelected() )
             {
+                value = 1;
+                item.setVisible(false);
+            }
+            else if( tab[2].isSelected() )
+            {
+                value = 2;
+                item.setVisible(true );
+            }
+            else if( tab[0].isSelected() )
+            {
+                value = 0;
                 // Auto
             }
 
@@ -106,6 +132,8 @@ public class ConfigMenu extends JDialog
 
             for (int i = 0; i < tab.length; i++)
                 values[i] = tab[i].isSelected();
+
+            this.app.setPropertie(item.getText(), value);
         }
 
         if( this.isVisible() )

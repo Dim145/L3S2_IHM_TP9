@@ -1,10 +1,7 @@
 package edu.mermet.tp9;
 
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.*;
 import java.util.Properties;
 import java.util.prefs.Preferences;
@@ -32,6 +29,9 @@ import edu.mermet.tp9.fenetres.FenetreTexte;
  */
 public class Application extends JFrame
 {
+    private final Properties properties;
+    private final File       fileProperties;
+
     private final ActionCommentFaire actionCommentFaire;
     private final ActionConfigMenu   actionConfigMenu;
 
@@ -59,14 +59,7 @@ public class Application extends JFrame
         JMenu menuFichier = new JMenu("Fichier");
         menuFichier.setMnemonic(KeyEvent.VK_F);
         JMenuItem quitter = new JMenuItem("Quitter");
-        quitter.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent aev)
-            {
-                System.exit(0);
-            }
-        });
+        quitter.addActionListener(aev -> this.saveAndExit());
         quitter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK));
         menuFichier.add(quitter);
         barre.add(menuFichier);
@@ -120,18 +113,12 @@ public class Application extends JFrame
         this.dialogCommentFaire = new CommentFaire();
 
         //------- Dialog config menu ----------------
-        this.dialogConfigMenu = new ConfigMenu(new JMenuItem[]{itemConversion, itemDiaporama, itemBoutons, itemTexte});
-        // ****** Fin création fenêtres ******
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 300);
-        this.setLocationRelativeTo(null);
-        setVisible(true);
+        JMenuItem[] tabMenuItem = new JMenuItem[]{itemConversion, itemDiaporama, itemBoutons, itemTexte};
 
-        File ihmRep = new File(System.getProperty("user.home") + "/.ihm");
+        File ihmRep         = new File(System.getProperty("user.home") + "/.ihm");
+        this.fileProperties = new File(ihmRep.getPath() + "/" + name + ".xml");
 
-        File pref = new File(ihmRep.getPath() + "/" + name + ".xml");
-
-        Properties properties = new Properties();
+        this.properties = new Properties();
         try
         {
             boolean isExist = ihmRep.exists();
@@ -142,20 +129,77 @@ public class Application extends JFrame
             if( !isExist )
                 throw new IOException("file .ihm not created");
 
-            isExist = pref.exists();
+            isExist = fileProperties.exists();
 
-            if( isExist ) properties.loadFromXML(new FileInputStream(pref));
-            else          isExist = pref.createNewFile();
+            if( isExist ) properties.loadFromXML(new FileInputStream(fileProperties));
+            else          isExist = fileProperties.createNewFile();
 
-            if( !isExist )
-                throw new IOException("fichier inexistant et impossible a creer: " + pref.getPath());
+            if( isExist )
+            {
+                // 0 = auto, 1 = caché, 2 = Affiché
+                for (JMenuItem item : tabMenuItem)
+                    if( properties.getOrDefault(item.getText(), null) == null )
+                        this.properties.setProperty(item.getText(), "0");
+            }
+            else
+            {
+                throw new IOException("fichier inexistant et impossible a creer: " + fileProperties.getPath());
+            }
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
 
+        this.dialogConfigMenu = new ConfigMenu(this, tabMenuItem);
+        // ****** Fin création fenêtres ******
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                saveAndExit();
+            }
+        });
+
+        setSize(600, 300);
+        this.setLocationRelativeTo(null);
+        setVisible(true);
+
         System.out.println(properties);
+    }
+
+    private void saveAndExit()
+    {
+        this.savePropertiesToXML();
+        System.exit(0);
+    }
+
+    public String getPropertie( String propertieName )
+    {
+        return this.properties.getProperty(propertieName, null);
+    }
+
+    public void setPropertie( String propertieName, String value )
+    {
+        this.properties.setProperty(propertieName, value);
+    }
+
+    public void setPropertie( String propertieName, int value )
+    {
+        this.setPropertie(propertieName, String.valueOf(value));
+    }
+
+    public void savePropertiesToXML()
+    {
+        try
+        {
+            this.properties.storeToXML(new FileOutputStream(this.fileProperties), "saved");
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private class ActionConfigMenu extends AbstractAction

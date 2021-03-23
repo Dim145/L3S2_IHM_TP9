@@ -5,7 +5,6 @@ import edu.mermet.tp9.resources.Resources;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 import java.awt.*;
 
 public class CommentFaire extends JDialog
