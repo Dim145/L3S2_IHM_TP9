@@ -15,7 +15,7 @@ public class FenetreConversion extends AbstractFenetreInterne
     private Action actionConvertir;
     private boolean celsiusAFocus;
 
-    public FenetreConversion(Action action)
+    public FenetreConversion(JFrame frame, Action action)
     {
         super(action, "Conversion celsius/Farenheit");
         this.setSize(new Dimension(100, 50));
@@ -26,7 +26,8 @@ public class FenetreConversion extends AbstractFenetreInterne
         JLabel labCelsius = new JLabel("Celsius :");
         champCelsius      = new JTextField(15);
 
-        champCelsius.addMouseListener(new MousePopUpMenu("aide Celcius"));
+        champCelsius.addMouseListener(new MousePopUpMenu(frame, "aide Celcius"));
+        champCelsius.setToolTipText("aide Celcius");
 
         ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/aide.png"));
         icon = new ImageIcon(icon.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
@@ -37,7 +38,7 @@ public class FenetreConversion extends AbstractFenetreInterne
         labelAideCelcius.setContentAreaFilled(false);
         labelAideCelcius.setPreferredSize(new Dimension(30, 30));
 
-        labelAideCelcius.addActionListener(event -> JOptionPane.showMessageDialog(null, "aide celcius", "Aide", JOptionPane.INFORMATION_MESSAGE));
+        labelAideCelcius.addActionListener(event -> JOptionPane.showInternalMessageDialog(frame.getRootPane(), "aide celcius", "Aide", JOptionPane.INFORMATION_MESSAGE));
 
         labCelsius.setLabelFor(champCelsius);
         ligneCelsius.add(labCelsius);
@@ -52,14 +53,16 @@ public class FenetreConversion extends AbstractFenetreInterne
         JLabel labFarenheit = new JLabel("Farenheit :");
         champFarenheit = new JTextField(15);
 
+        champFarenheit.setToolTipText("aide Farenheit");
+
         JButton labelAideFaren = new JButton(icon);
 
         labelAideFaren.setBorder(BorderFactory.createEmptyBorder());
         labelAideFaren.setContentAreaFilled(false);
         labelAideFaren.setPreferredSize(new Dimension(30, 30));
 
-        labelAideFaren.addActionListener(event -> JOptionPane.showMessageDialog(null, "aide Faren", "Aide", JOptionPane.INFORMATION_MESSAGE));
-        champFarenheit.addMouseListener(new MousePopUpMenu("aide Farenjeit"));
+        labelAideFaren.addActionListener(event -> JOptionPane.showInternalMessageDialog(frame.getRootPane(), "aide Faren", "Aide", JOptionPane.INFORMATION_MESSAGE));
+        champFarenheit.addMouseListener(new MousePopUpMenu(frame, "aide Farenjeit"));
 
         labFarenheit.setLabelFor(champFarenheit);
         ligneFarenheit.add(labFarenheit);
@@ -141,9 +144,11 @@ public class FenetreConversion extends AbstractFenetreInterne
     private static class MousePopUpMenu extends MouseAdapter
     {
         private String texteAide;
+        private JFrame frame;
 
-        public MousePopUpMenu( String texteAide )
+        public MousePopUpMenu( JFrame frame, String texteAide )
         {
+            this.frame     = frame;
             this.texteAide = texteAide;
         }
 
@@ -157,7 +162,7 @@ public class FenetreConversion extends AbstractFenetreInterne
 
                 menu.add(aide);
 
-                aide.addActionListener(event -> JOptionPane.showMessageDialog(null, this.texteAide, "Aide", JOptionPane.INFORMATION_MESSAGE));
+                aide.addActionListener(event -> JOptionPane.showInternalMessageDialog(this.frame.getRootPane(), this.texteAide, "Aide", JOptionPane.INFORMATION_MESSAGE));
 
                 menu.show((Component) e.getSource(), e.getX(), e.getY());
             }

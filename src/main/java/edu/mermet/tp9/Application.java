@@ -13,6 +13,7 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
+import edu.mermet.tp9.dialogs.AideContextuel;
 import edu.mermet.tp9.dialogs.CommentFaire;
 import edu.mermet.tp9.dialogs.ConfigMenu;
 import edu.mermet.tp9.fenetres.FenetreBoutons;
@@ -41,6 +42,8 @@ public class Application extends JFrame
     private final Action actionAfficherTexte;
     private final Action actionAfficherDiaporama;
     private final Action actionAfficherBoutons;
+
+    private final AideContextuel aideContextuel;
 
     public Application()
     {
@@ -91,7 +94,7 @@ public class Application extends JFrame
 
         // ****** Création des fenêtres ******
         // ------ fenêtre conversion ------
-        conversion = new FenetreConversion(actionAfficherConversion);
+        conversion = new FenetreConversion(this, actionAfficherConversion);
         this.add(conversion);
         // ------ fenêtre texte ------
         texte = new FenetreTexte(actionAfficherTexte);
@@ -110,6 +113,10 @@ public class Application extends JFrame
         JMenuItem[] tabMenuItem = new JMenuItem[]{itemConversion, itemDiaporama, itemBoutons, itemTexte};
 
         this.dialogConfigMenu = new ConfigMenu(tabMenuItem);
+
+        //********* Aide contextuel ***********
+        this.aideContextuel = new AideContextuel(this);
+
         // ****** Fin création fenêtres ******
 
         this.addWindowListener(new WindowAdapter()
@@ -124,6 +131,9 @@ public class Application extends JFrame
         setSize(600, 300);
         this.setLocationRelativeTo(null);
         setVisible(true);
+
+        if( aideContextuel.isEnabled() )
+            aideContextuel.setVisible(true);
     }
 
     private void saveAndExit()

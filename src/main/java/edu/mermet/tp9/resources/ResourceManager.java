@@ -17,6 +17,7 @@ public class ResourceManager
     private Locale locale;
     private ResourceBundle texteBundle;
     private ResourceBundle titreBundle;
+    private ResourceBundle aideContextuelBundle;
 
     public ResourceManager()
     {
@@ -27,9 +28,10 @@ public class ResourceManager
     {
         if( locale == null ) return;
 
-        this.locale      = locale;
-        this.texteBundle = ResourceBundle.getBundle("howTo.textes", locale);
-        this.titreBundle = ResourceBundle.getBundle("howTo.titre" , locale);
+        this.locale               = locale;
+        this.texteBundle          = ResourceBundle.getBundle("howTo.textes", locale);
+        this.titreBundle          = ResourceBundle.getBundle("howTo.titre" , locale);
+        this.aideContextuelBundle = ResourceBundle.getBundle("aideContextuel.texteAide", locale);
     }
 
     public Locale getLocale()
@@ -40,6 +42,16 @@ public class ResourceManager
     public String getTitreString(Resources res)
     {
         return this.titreBundle.getString(res.getKey());
+    }
+
+    public String getTexteAideContextuel( int val )
+    {
+        return this.aideContextuelBundle.getString(String.valueOf(val));
+    }
+
+    public int getNbTexteAideContextuel()
+    {
+        return this.aideContextuelBundle.keySet().size();
     }
 
     public String getHTMLHowTOText(Resources res)
