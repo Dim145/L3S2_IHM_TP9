@@ -5,6 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.*;
+import java.util.Properties;
+import java.util.prefs.Preferences;
+import java.util.prefs.PreferencesFactory;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JDesktopPane;
@@ -44,7 +48,7 @@ public class Application extends JFrame
     private final Action actionAfficherDiaporama;
     private final Action actionAfficherBoutons;
 
-    public Application()
+    public Application( String name )
     {
         super("multi-fenêtres");
         this.setContentPane(new JDesktopPane());
@@ -122,6 +126,36 @@ public class Application extends JFrame
         setSize(600, 300);
         this.setLocationRelativeTo(null);
         setVisible(true);
+
+        File ihmRep = new File(System.getProperty("user.home") + "/.ihm");
+
+        File pref = new File(ihmRep.getPath() + "/" + name + ".xml");
+
+        Properties properties = new Properties();
+        try
+        {
+            boolean isExist = ihmRep.exists();
+
+            if( !isExist )
+                isExist = ihmRep.mkdir();
+
+            if( !isExist )
+                throw new IOException("file .ihm not created");
+
+            isExist = pref.exists();
+
+            if( isExist ) properties.loadFromXML(new FileInputStream(pref));
+            else          isExist = pref.createNewFile();
+
+            if( !isExist )
+                throw new IOException("fichier inexistant et impossible a creer: " + pref.getPath());
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        System.out.println(properties);
     }
 
     private class ActionConfigMenu extends AbstractAction
@@ -263,7 +297,7 @@ public class Application extends JFrame
 
     public static void main(String[] args)
     {
-        SwingUtilities.invokeLater(Application::new);
+        SwingUtilities.invokeLater( () -> new Application(args.length > 0 ? args[0] : System.getProperty("user.name")));
     }
 
 

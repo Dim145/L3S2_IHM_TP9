@@ -25,24 +25,13 @@ public class FenetreDiaporama extends AbstractFenetreInterne
     {
         super(action, "Diaporama");
         images = new ImageIcon[3];
-        try
-        {
-            images[0] = new ImageIcon(new ImageIcon(
-                    new URL("http://bruno.mermet.pagesperso-orange.fr/Personnel/Anes/Randos/TourDeLaHague/10bocage.jpg")).getImage().getScaledInstance(
+
+        images[0] = new ImageIcon(new ImageIcon(FenetreDiaporama.class.getResource("/images/10bocage.jpg")).getImage().getScaledInstance(
+                300, -1, Image.SCALE_DEFAULT));
+        images[1] = new ImageIcon(new ImageIcon(FenetreDiaporama.class.getResource("/images/12baieEcalgrain.jpg")).getImage().getScaledInstance(
+                300, -1, Image.SCALE_DEFAULT));
+        images[2] = new ImageIcon(new ImageIcon(FenetreDiaporama.class.getResource("/images/15cote.jpg")).getImage().getScaledInstance(
                     300, -1, Image.SCALE_DEFAULT));
-            images[1] = new ImageIcon(new ImageIcon(
-                    new URL("http://bruno.mermet.pagesperso-orange.fr/Personnel/Anes/Randos/TourDeLaHague/12baieEcalgrain.jpg")).getImage().getScaledInstance(
-                    300, -1, Image.SCALE_DEFAULT));
-            images[2] = new ImageIcon(new ImageIcon(
-                    new URL("http://bruno.mermet.pagesperso-orange.fr/Personnel/Anes/Randos/TourDeLaHague/15cote.jpg")).getImage().getScaledInstance(
-                    300, -1, Image.SCALE_DEFAULT));
-        }
-        catch (MalformedURLException ex)
-        {
-            images[0] = null;
-            images[1] = null;
-            images[2] = null;
-        }
 
         JPanel panneauTexte = new JPanel();
         /*textes = new String[3];
