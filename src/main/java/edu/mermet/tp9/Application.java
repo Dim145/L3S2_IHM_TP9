@@ -222,7 +222,7 @@ public class Application extends JFrame
             boutons.setVisible(true);
             enableBoutons(false);
 
-            if( valNiveau < FenetreBoutons.COMPLEXITER*2 )
+            if( valNiveau < FenetreBoutons.COMPLEXITER*4 )
             {
                 augmenterCompetence(FenetreBoutons.COMPLEXITER / (COMPETENCE_DIVISEUR * 1f));
 
@@ -246,7 +246,7 @@ public class Application extends JFrame
             diaporama.setVisible(true);
             enableDiaporama(false);
 
-            if( valNiveau < FenetreDiaporama.COMPLEXITER*2 )
+            if( valNiveau < FenetreDiaporama.COMPLEXITER*4 )
             {
                 augmenterCompetence(FenetreDiaporama.COMPLEXITER / (COMPETENCE_DIVISEUR * 1f));
 
@@ -270,7 +270,7 @@ public class Application extends JFrame
             texte.setVisible(true);
             enableTexte(false);
 
-            if( valNiveau < FenetreTexte.COMPLEXITER*2 )
+            if( valNiveau < FenetreTexte.COMPLEXITER*4 )
             {
                 augmenterCompetence(FenetreTexte.COMPLEXITER / (COMPETENCE_DIVISEUR * 1f));
 
@@ -294,7 +294,7 @@ public class Application extends JFrame
             conversion.setVisible(true);
             enableConversion(false);
 
-            if( valNiveau < FenetreConversion.COMPLEXITER*2 )
+            if( valNiveau < FenetreConversion.COMPLEXITER*4 )
             {
                 augmenterCompetence(FenetreConversion.COMPLEXITER / (COMPETENCE_DIVISEUR * 1f));
 

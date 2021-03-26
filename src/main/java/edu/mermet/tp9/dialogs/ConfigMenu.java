@@ -130,9 +130,7 @@ public class ConfigMenu extends JDialog
             }
             else if( tab[0].isSelected() )
             {
-                value = 0;
-
-                int complexiter = 0;
+                int complexiter = value = 0;
 
                 switch (item.getText())
                 {

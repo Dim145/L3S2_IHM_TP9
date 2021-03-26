@@ -51,15 +51,33 @@ public class AideContextuel extends JWindow
             return;
         }
 
+        ArrayList<Integer> listBanCompetence = new ArrayList<>();
+
+        float valCompetence = Float.parseFloat(PropertiesManager.getInstance().getPropertie("niveau"));
+
+        for (int i = 0; i < nbAideDisponible; i++)
+        {
+            String res = ResourceManager.getInstance().getTexteAideContextuel(i);
+            int val = Integer.parseInt(res.substring(res.lastIndexOf("-")+1).trim());
+
+            if( val > valCompetence && !listBanValue.contains(i) )
+                listBanCompetence.add(i);
+        }
+
+        if( listBanValue.size() + listBanCompetence.size() >= nbAideDisponible )
+        {
+            this.setEnabled(false);
+            return;
+        }
+
         int randomAide;
         do
         {
             randomAide = (int) (Math.random()*(nbAideDisponible));
         }
-        while (listBanValue.contains(randomAide));
+        while (listBanValue.contains(randomAide) || listBanCompetence.contains(randomAide));
 
         nePlusAfficher = new JButton("Ne Plus Afficher");
-
 
         String texteToAdd = banValues + (banValues.isEmpty() || banValues.endsWith(",") ? "" : ",") + randomAide + ",";
         nePlusAfficher.addActionListener(event ->
@@ -68,7 +86,9 @@ public class AideContextuel extends JWindow
             fermer.doClick();
         });
 
-        JLabel label = new JLabel(ResourceManager.getInstance().getTexteAideContextuel(randomAide));
+        String res = ResourceManager.getInstance().getTexteAideContextuel(randomAide);
+
+        JLabel label = new JLabel(res.substring(0, res.lastIndexOf("-")));
         label.setOpaque(true);
         label.setBackground(Color.WHITE);
 

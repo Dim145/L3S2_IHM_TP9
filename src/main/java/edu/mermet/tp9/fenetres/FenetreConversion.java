@@ -11,10 +11,10 @@ public class FenetreConversion extends AbstractFenetreInterne
 {
     public static final int COMPLEXITER = 4;
 
-    private JTextField champCelsius;
-    private JTextField champFarenheit;
-    private JButton boutonConvertir;
-    private Action actionConvertir;
+    private final JTextField champCelsius;
+    private final JTextField champFarenheit;
+    private final JButton boutonConvertir;
+    private final Action actionConvertir;
     private boolean celsiusAFocus;
 
     public FenetreConversion(JFrame frame, Action action)
