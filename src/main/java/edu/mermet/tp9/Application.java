@@ -27,6 +27,8 @@ import edu.mermet.tp9.properties.PropertiesManager;
  */
 public class Application extends JFrame
 {
+    public static final int COMPETENCE_DIVISEUR = 10;
+
     private final ActionCommentFaire actionCommentFaire;
     private final ActionConfigMenu   actionConfigMenu;
 
@@ -45,10 +47,23 @@ public class Application extends JFrame
 
     private final AideContextuel aideContextuel;
 
+    private float valNiveau;
+
     public Application()
     {
         super("multi-fenêtres");
         this.setContentPane(new JDesktopPane());
+
+        // load properties
+        String niveau = PropertiesManager.getInstance().getPropertie("niveau");
+
+        if( niveau == null )
+        {
+            niveau = "1";
+            PropertiesManager.getInstance().setPropertie("niveau", niveau);
+        }
+
+        this.valNiveau = Float.parseFloat(niveau);
 
         // ****** Barre de menu ******
         JMenuBar barre = new JMenuBar();
@@ -56,7 +71,16 @@ public class Application extends JFrame
         JMenu menuFichier = new JMenu("Fichier");
         menuFichier.setMnemonic(KeyEvent.VK_F);
         JMenuItem quitter = new JMenuItem("Quitter");
-        quitter.addActionListener(aev -> this.saveAndExit());
+        quitter.addActionListener(aev ->
+        {
+            if( this.valNiveau < 4 )
+            {
+                this.valNiveau += 1.0 / COMPETENCE_DIVISEUR;
+                PropertiesManager.getInstance().setPropertie("niveau", String.valueOf(this.valNiveau));
+            }
+
+            this.saveAndExit();
+        });
         quitter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK));
         menuFichier.add(quitter);
         barre.add(menuFichier);
@@ -159,6 +183,13 @@ public class Application extends JFrame
         }
     }
 
+    private void augmenterCompetence( float competence )
+    {
+        this.valNiveau += competence;
+
+        PropertiesManager.getInstance().setPropertie("niveau", String.valueOf(this.valNiveau));
+    }
+
     private class ActionCommentFaire extends AbstractAction
     {
         public ActionCommentFaire()
@@ -190,6 +221,13 @@ public class Application extends JFrame
         {
             boutons.setVisible(true);
             enableBoutons(false);
+
+            if( valNiveau < FenetreBoutons.COMPLEXITER*2 )
+            {
+                augmenterCompetence(FenetreBoutons.COMPLEXITER / (COMPETENCE_DIVISEUR * 1f));
+
+                dialogConfigMenu.execValidScript();
+            }
         }
     }
 
@@ -207,6 +245,13 @@ public class Application extends JFrame
         {
             diaporama.setVisible(true);
             enableDiaporama(false);
+
+            if( valNiveau < FenetreDiaporama.COMPLEXITER*2 )
+            {
+                augmenterCompetence(FenetreDiaporama.COMPLEXITER / (COMPETENCE_DIVISEUR * 1f));
+
+                dialogConfigMenu.execValidScript();
+            }
         }
     }
 
@@ -224,6 +269,13 @@ public class Application extends JFrame
         {
             texte.setVisible(true);
             enableTexte(false);
+
+            if( valNiveau < FenetreTexte.COMPLEXITER*2 )
+            {
+                augmenterCompetence(FenetreTexte.COMPLEXITER / (COMPETENCE_DIVISEUR * 1f));
+
+                dialogConfigMenu.execValidScript();
+            }
         }
     }
 
@@ -241,6 +293,13 @@ public class Application extends JFrame
         {
             conversion.setVisible(true);
             enableConversion(false);
+
+            if( valNiveau < FenetreConversion.COMPLEXITER*2 )
+            {
+                augmenterCompetence(FenetreConversion.COMPLEXITER / (COMPETENCE_DIVISEUR * 1f));
+
+                dialogConfigMenu.execValidScript();
+            }
         }
     }
 

@@ -9,6 +9,8 @@ import javax.swing.*;
  */
 public class FenetreConversion extends AbstractFenetreInterne
 {
+    public static final int COMPLEXITER = 4;
+
     private JTextField champCelsius;
     private JTextField champFarenheit;
     private JButton boutonConvertir;
@@ -96,6 +98,12 @@ public class FenetreConversion extends AbstractFenetreInterne
         {
             celsiusAFocus = aStocker;
         }
+    }
+
+    @Override
+    public int getComplexiter()
+    {
+        return COMPLEXITER;
     }
 
     private class ActionConvertir extends AbstractAction

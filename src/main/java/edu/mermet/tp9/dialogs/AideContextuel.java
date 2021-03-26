@@ -43,6 +43,8 @@ public class AideContextuel extends JWindow
 
         int nbAideDisponible = ResourceManager.getInstance().getNbTexteAideContextuel();
 
+        //
+
         if( nbAideDisponible == listBanValue.size() )
         {
             this.setEnabled(false);

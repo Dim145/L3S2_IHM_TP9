@@ -1,6 +1,7 @@
 package edu.mermet.tp9.dialogs;
 
 import edu.mermet.tp9.Application;
+import edu.mermet.tp9.fenetres.*;
 import edu.mermet.tp9.properties.PropertiesManager;
 
 import javax.swing.*;
@@ -107,8 +108,10 @@ public class ConfigMenu extends JDialog
             this.setVisible(false);
     }
 
-    private void execValidScript()
+    public void execValidScript()
     {
+        float valCompetence = Float.parseFloat(this.propertiesManager.getPropertie("niveau"));
+
         for (JMenuItem item : this.hashMapRadioBtn.keySet())
         {
             JRadioButton[] tab = this.hashMapRadioBtn.get(item);
@@ -128,7 +131,18 @@ public class ConfigMenu extends JDialog
             else if( tab[0].isSelected() )
             {
                 value = 0;
-                // Auto
+
+                int complexiter = 0;
+
+                switch (item.getText())
+                {
+                    case "Diaporama"                   : complexiter = FenetreDiaporama.COMPLEXITER;break;
+                    case "Saisie de texte"             : complexiter = FenetreTexte.COMPLEXITER;break;
+                    case "Conversion Celsius/Farenheit": complexiter = FenetreConversion.COMPLEXITER;break;
+                    case "Boutons"                     : complexiter = FenetreBoutons.COMPLEXITER;break;
+                }
+
+                item.setVisible(valCompetence >= complexiter);
             }
 
             Boolean[] values = this.hashMapBaseValue.get(item);

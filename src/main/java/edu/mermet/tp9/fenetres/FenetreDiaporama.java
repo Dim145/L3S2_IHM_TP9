@@ -12,6 +12,8 @@ import javax.swing.*;
  */
 public class FenetreDiaporama extends AbstractFenetreInterne
 {
+    public static final int COMPLEXITER = 2;
+
     ImageIcon[] images;
     String[] textes;
     JLabel affichage;
@@ -46,6 +48,12 @@ public class FenetreDiaporama extends AbstractFenetreInterne
         //pack();
 
         affichage.addMouseListener(new MousePopUpMenu("Image qui change toutes les 2s."));
+    }
+
+    @Override
+    public int getComplexiter()
+    {
+        return COMPLEXITER;
     }
 
     class Defilement implements Runnable

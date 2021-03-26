@@ -9,6 +9,8 @@ import javax.swing.*;
  */
 public class FenetreTexte extends AbstractFenetreInterne
 {
+    public static final int COMPLEXITER = 4;
+
     private JCheckBox gras;
     private JCheckBox rouge;
     private Action actionGras;
@@ -44,6 +46,11 @@ public class FenetreTexte extends AbstractFenetreInterne
         texte.addMouseListener(new MousePopUpMenu("Zone d'edition de texte. Du texte peut etre saisie"));
     }
 
+    @Override
+    public int getComplexiter()
+    {
+        return COMPLEXITER;
+    }
 
     private class ActionGras extends AbstractAction
     {

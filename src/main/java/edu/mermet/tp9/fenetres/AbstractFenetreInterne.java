@@ -29,4 +29,6 @@ public abstract class AbstractFenetreInterne extends JInternalFrame
             action.setEnabled(true);
         }
     }
+
+    public abstract int getComplexiter();
 }

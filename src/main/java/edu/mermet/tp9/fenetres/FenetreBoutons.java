@@ -12,6 +12,8 @@ import edu.mermet.tp9.Application;
  */
 public class FenetreBoutons extends AbstractFenetreInterne
 {
+    public static final int COMPLEXITER = 8;
+
     private JButton boutonTexte;
     private JButton boutonDiaporama;
     private JButton boutonDegres;
@@ -31,6 +33,12 @@ public class FenetreBoutons extends AbstractFenetreInterne
         boutonTexte    .addMouseListener(new MousePopUpMenu("affiche une saisie de texte"));
         boutonDiaporama.addMouseListener(new MousePopUpMenu("affiche un Diaporama"));
         boutonDegres   .addMouseListener(new MousePopUpMenu("affiche une fenetre de convertion"));
+    }
+
+    @Override
+    public int getComplexiter()
+    {
+        return COMPLEXITER;
     }
 
     private static class MousePopUpMenu extends MouseAdapter
